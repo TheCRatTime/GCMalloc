@@ -44,11 +44,7 @@ static void TestFunc(void) {
   ptr2->cycle_dep = ptr1;
   garbage->cycle_dep = ptr1;
 
-  RunGC();
-
-  GCUnregisterRoot(garbage);
-
-  RunGC();
+  GC_FULL_RUN();
   
   GCreturn;
 }
@@ -61,8 +57,8 @@ int main(void) {
   TestFunc();
   
   printf("RunGC()\n");
-  
-  RunGC();
+
+  GC_FULL_RUN();
 
   AllocatorLog();
   KillAllocator();
