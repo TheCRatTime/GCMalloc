@@ -115,7 +115,7 @@ void GCRegDestructor(void* ptr, GCDestructor dsr);
   int loops = 100; \
   RunGC(1); \
   while (gGCState.state != GC_START && loops-- > 0) { \
-    RunGC(999); \
+    RunGC(999999); \
   } \
 } while (0)
 
