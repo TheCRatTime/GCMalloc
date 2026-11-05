@@ -75,9 +75,9 @@ void* GCMalloc(size_t size);
    Return value is malloc() function like. */
 void* GCMallocDep(size_t size, void* dep);
 
-/* Allocate memory but not register as root.
+/* Allocate memory but register to DEP.
    Return value is malloc() function like. */
-void* GCMallocRaw(size_t size);
+void* GCMallocChild(size_t size, void* dep);
 
 /* Add dependency DEP to PTR */
 void GCAddDependency(void* ptr, void* dep);
@@ -518,10 +518,10 @@ void RunGC(size_t steps) {
   GC_THOUGHT("GC: garbage not stops.\n");
 }
 
-#define GC_ROOT 1
-#define GC_DEP  2
-#define GC_RAW  3
-#define GC_BAD  4
+#define GC_ROOT  1
+#define GC_DEP   2
+#define GC_CHILD 3
+#define GC_BAD   4
 
 static void* RealGCMalloc(size_t size, GCu8 opt, void* dep) {
   void* ret = NULL;
@@ -539,6 +539,8 @@ static void* RealGCMalloc(size_t size, GCu8 opt, void* dep) {
     GCRegisterRoot(ret);
   } else if (opt == GC_DEP && dep != NULL) {
     GCAddDependency(ret, dep);
+  } else if (opt == GC_CHILD && dep != NULL) {
+    GCAddDependency(dep, ret);
   }
 
   return ret;
@@ -552,8 +554,8 @@ void* GCMallocDep(size_t size, void* dep) {
   return RealGCMalloc(size, GC_DEP, dep);
 }
 
-void* GCMallocRaw(size_t size) {
-  return RealGCMalloc(size, GC_RAW, NULL);
+void* GCMallocChild(size_t size, void* parent) {
+  return RealGCMalloc(size, GC_CHILD, parent);
 }
 
 void GCRegDestructor(void* ptr, GCDestructor dsr) {
