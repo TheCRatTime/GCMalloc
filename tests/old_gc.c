@@ -31,10 +31,7 @@ int main(void) {
 
   obj = (GCObject*)(void*)((char*)old - sizeof(GCObject));
 
-  GCSurvivied(obj);
-  GCSurvivied(obj);
-  GCSurvivied(obj);
-  GCSurvivied(obj);
+  obj->metadata |= 0xB0;
 
   RunGC(1);
 
@@ -42,12 +39,7 @@ int main(void) {
 
   GC_DEINIT();
 
-  printf("%u\n", gGCState.gc_runs);
-
-  GC_FULL_RUN();
-  
-  printf("%u\n", gGCState.gc_runs);
-  
+  GC_FULL_RUN();  
   GC_FULL_RUN();
 
   AllocatorLog();
