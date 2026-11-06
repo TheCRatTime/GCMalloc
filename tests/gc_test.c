@@ -29,7 +29,7 @@ static void TestFunc(void) {
   GC_INIT();
 
   ptr1 = (HardStruct*)GCMalloc(sizeof(HardStruct));
-  ptr2 = (HardStruct*)GCMallocChild(sizeof(HardStruct), ptr1); /* No registering to roots */
+  ptr2 = (HardStruct*)GCMalloc(sizeof(HardStruct)); /* No registering to roots */
   garbage = (HardStruct*)GCMalloc(sizeof(HardStruct)); /* unused */
 
   if (!ptr1 || !ptr2 || !garbage) {
@@ -41,8 +41,6 @@ static void TestFunc(void) {
   GCRegDestructor(ptr1, PtrHandler);
   GCRegDestructor(ptr2, PtrHandler);
   GCRegDestructor(garbage, PtrHandler);
-
-  GCAddDependency(ptr2, ptr1);
 
   /* For set using GC_SET_PTR */
   GC_SET_PTR(ptr1, cycle_dep, ptr2);
