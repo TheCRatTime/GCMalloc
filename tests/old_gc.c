@@ -42,7 +42,12 @@ int main(void) {
 
   GC_DEINIT();
 
+  printf("%u\n", gGCState.gc_runs);
+
   GC_FULL_RUN();
+  
+  printf("%u\n", gGCState.gc_runs);
+  
   GC_FULL_RUN();
 
   AllocatorLog();

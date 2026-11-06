@@ -114,7 +114,20 @@ void GCRegDestructor(void* ptr, GCDestructor dsr);
 
 #define GC_FULL_RUN() do { \
   int loops = 100; \
-  RunGC(1); \
+  if (gGCState.state == GC_START) { \
+    RunGC(1); \
+  } \
+  while (gGCState.state != GC_START && loops-- > 0) { \
+    RunGC(999999); \
+  } \
+} while (0)
+
+#define GC_ALL_FULL_RUN() do { \
+  int loops = 100; \
+  gGCState.gc_runs = 5; \
+  if (gGCState.state == GC_START) { \
+    RunGC(1); \
+  } \
   while (gGCState.state != GC_START && loops-- > 0) { \
     RunGC(999999); \
   } \
