@@ -9,7 +9,7 @@
 #define DEBUG
 
 #include <dbg_alloc.h>
-#include <GCmalloc.h>
+#include <GCMalloc.h>
 
 #include <stdio.h>
 
@@ -42,12 +42,9 @@ static void TestFunc(void) {
   GCRegDestructor(ptr2, PtrHandler);
   GCRegDestructor(garbage, PtrHandler);
 
-  /* For set using GC_SET_PTR */
-  GC_SET_PTR(ptr1, cycle_dep, ptr2);
-  GC_SET_PTR(ptr2, cycle_dep, ptr1);
-  GC_SET_PTR(garbage, cycle_dep, ptr1);
+  /* DEBUG */ printf("%p\n", (void*)gGCState.roots);
 
-  GC_FULL_RUN();
+  RunGC();
   
   GC_DEINIT();
 }
@@ -61,7 +58,7 @@ int main(void) {
   
   printf("RunGC()\n");
 
-  GC_FULL_RUN();
+  RunGC();
 
   AllocatorLog();
   KillAllocator();

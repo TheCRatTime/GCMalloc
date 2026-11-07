@@ -7,9 +7,10 @@
 ### Features
 - **No memory leaks**: [dbg_alloc](https://github.com/TheCRatTime/dbg_alloc/)
   shows all blocks are freed without any corruption (`tests/gc_test.c`).
-- **Generational Incremental Tri-color GC**: no **Stop-the-World** pauses, high latency.
-- **Cycle dependencies process**: no memory leaks.
+- **Mark-and-Sweep GC**: one pause, fastest program work.
 - **C89**/**ANSI C**: compiles everywhere.
+- **Simple API**: just **GC_INIT()** and **GC_DEINIT()** in every function,
+  or use root frames.
 
 ### Building
 Needed:
